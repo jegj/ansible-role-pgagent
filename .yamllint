@@ -1,0 +1,14 @@
+---
+extends: default
+
+ignore: |
+  molecule/
+  roles/external/
+
+rules:
+  truthy:
+    allowed-values:
+      - 'true'
+      - 'false'
+      - 'yes'
+      - 'no'

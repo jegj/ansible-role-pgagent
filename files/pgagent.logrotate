@@ -1,0 +1,10 @@
+/var/log/pgagent/*.log {
+  weekly
+  rotate 5
+  dateext
+  missingok
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}

@@ -1,0 +1,24 @@
+[Unit]
+Description=pgagent unit file for database %i
+After=postgresql.service
+
+[Service]
+CPUAccounting=yes
+MemoryAccounting=yes
+TasksAccounting=yes
+Type=forking
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=pgagent_%i
+User=postgres
+Group=postgres
+EnvironmentFile=/etc/pgagent/%i.conf
+PermissionsStartOnly=true
+ExecStartPre=-/bin/mkdir -p /var/log/pgagent
+ExecStartPre=-/bin/chmod 755 /var/log/pgagent/
+ExecStartPre=-/bin/chown postgres:postgres -R /var/log/pgagent/
+ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -l ${PG_AGENT_LOG_MODE} dbname=%i user=postgres port=${PG_AGENT_TARGET_PORT}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

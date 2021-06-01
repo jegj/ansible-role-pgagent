@@ -1,0 +1,7 @@
+---
+- name: Install pgagent {{ pgagent_version }} apt package
+  apt:
+    state: present
+    name: pgagent={{ pgagent_version }}
+    update_cache: yes
+  notify: restart pgagent
