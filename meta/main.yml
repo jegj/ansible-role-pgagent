@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: pgAgent
+  role_name: pgagent
   author: jegj
   description: pgAgent Installation for Linux
   license: "license (BSD, MIT)"
