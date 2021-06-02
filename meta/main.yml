@@ -16,8 +16,9 @@ galaxy_info:
         - bionic
   galaxy_tags:
     - postgres
-    - pgAgent
+    - pgagent
     - database
     - systemd
+    - scheduling
 
 dependencies: []
