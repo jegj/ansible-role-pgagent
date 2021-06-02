@@ -1,9 +1,12 @@
 ---
 - name: default
   hosts: all
+  become: yes
   vars:
     pgagent_database: pgagent_test_db
-  tasks:
-    - name: "Include pgAgent role"
-      include_role:
-        name: "ansible-role-pgAgent"
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - role: jegj.pgagent
