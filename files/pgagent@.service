@@ -14,10 +14,7 @@ User=postgres
 Group=postgres
 EnvironmentFile=/etc/pgagent/%i.conf
 PermissionsStartOnly=true
-ExecStartPre=-/bin/mkdir -p /var/log/pgagent
-ExecStartPre=-/bin/chmod 755 /var/log/pgagent/
-ExecStartPre=-/bin/chown postgres:postgres -R /var/log/pgagent/
-ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -l ${PG_AGENT_LOG_MODE} dbname=%i user=postgres port=${PG_AGENT_TARGET_PORT}
+ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -t ${PG_AGENT_POLL_INTERVAL} -r ${PG_AGENT_RETRY_PERIOD} -l ${PG_AGENT_LOG_VERBOSITY} dbname=%i user=postgres port=${PG_AGENT_TARGET_PORT}
 Restart=on-failure
 
 [Install]

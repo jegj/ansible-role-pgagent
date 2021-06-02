@@ -1,0 +1,38 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+
+    - name: Install common packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - curl
+        - build-essential
+        - postgresql
+        - postgresql-contrib
+
+    - name: Get the version from the offline pg cluster
+      shell: pg_lsclusters -h | awk '{ print $1 }'
+      register: pg_cluster_version
+      changed_when: no
+
+    - name: Get the version from the offline pg cluster
+      shell: pg_lsclusters -h | awk '{ print $3 }'
+      register: pg_cluster_port
+      changed_when: no
+
+    - name: Start pg cluster
+      command: pg_ctlcluster {{ pg_cluster_version.stdout }} main start
+      changed_when: no
+
+    - name: Create testing database
+      command: >-
+        psql -p {{ pg_cluster_port.stdout }} -c "CREATE DATABASE pgagent_test_db"
+      become_user: postgres

@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: force all notified handlers
+      meta: flush_handlers
+
+    - name: Check pgagent is started
+      systemd:
+        name: "pgagent@{{ pgAgent_database }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+

@@ -1,7 +1,66 @@
 ---
-- name: Install pgagent {{ pgagent_version }} apt package
+- name: Fail when pgAgent_database is not present
+  fail:
+    msg: "Variable pgAgent_database is required"
+  when: pgAgent_database is not defined or pgAgent_database|length == 0
+
+- name: Install pgagent apt package
   apt:
     state: present
-    name: pgagent={{ pgagent_version }}
+    name: pgagent
     update_cache: yes
+    only_upgrade: "{{ pgAgent_upgrade }}"
+  notify: restart pgagent
+
+- name: Create extension in the target database
+  shell: >-
+    psql -p {{ pgAgent_database_port }} -d {{ pgAgent_database }}
+    -c "CREATE EXTENSION IF NOT EXISTS pgagent"
+  register: create_extension
+  become_user: postgres
+  become: yes
+  changed_when: >-
+    'already exists, skipping' not in create_extension.stderr
+  notify: restart pgagent
+
+- name: Create a directory for env variables
+  file:
+    path: /etc/pgagent
+    state: directory
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create env file
+  template:
+    src: templates/env.conf
+    dest: /etc/pgagent/{{ pgAgent_database }}.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart pgagent
+
+- name: Create log entries for pgAgent unit
+  file:
+    path: /var/log/pgagent
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0755'
+
+- name: Set up logrotate entry for pgagent unit
+  copy:
+    src: files/pgagent.logrotate
+    dest: /etc/logrotate.d/pgagent
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy pgAgent template unit into /lib/systemd/system/pgagent@.service
+  copy:
+    src: files/pgagent@.service
+    dest: /etc/systemd/system/pgagent@.service
+    owner: root
+    group: root
+    mode: '0644'
   notify: restart pgagent

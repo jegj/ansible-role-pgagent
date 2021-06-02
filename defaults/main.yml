@@ -1,2 +1,4 @@
 ---
-# defaults file for ansible-role-pgAgent
+pgAgent_upgrade: false
+pgAgent_database: ''
+pgAgent_database_port: 5432
