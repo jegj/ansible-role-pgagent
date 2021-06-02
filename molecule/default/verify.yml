@@ -2,8 +2,8 @@
 - name: Verify
   hosts: all
   gather_facts: false
-  vars_files:
-    - vars.yml
+  vars:
+    pgAgent_database: pgagent_test_db
   tasks:
 
     - name: force all notified handlers
