@@ -1,6 +1,8 @@
 Ansible Role pgAgent
 =========
 
+[![CI Pipeline](https://github.com/jegj/ansible-role-pgagent/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jegj/ansible-role-pgagent/actions/workflows/ci.yml)
+
 Install [pgAgent](https://www.pgadmin.org/docs/pgadmin4/development/pgagent.html) package, create the postgres extension and start pgAgent as a systemd unit for a target Postgresql database server on Debian/Ubuntu.
 
 Requirements
