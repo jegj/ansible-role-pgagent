@@ -1,20 +1,20 @@
 ---
-- name: Fail when pgAgent_database is not present
+- name: Fail when pgagent_database is not present
   fail:
-    msg: "Variable pgAgent_database is required"
-  when: pgAgent_database is not defined or pgAgent_database|length == 0
+    msg: "Variable pgagent_database is required"
+  when: pgagent_database is not defined or pgagent_database|length == 0
 
 - name: Install pgagent apt package
   apt:
     state: present
     name: pgagent
     update_cache: yes
-    only_upgrade: "{{ pgAgent_upgrade }}"
+    only_upgrade: "{{ pgagent_upgrade }}"
   notify: restart pgagent
 
 - name: Create extension in the target database
-  shell: >-
-    psql -p {{ pgAgent_database_port }} -d {{ pgAgent_database }}
+  command: >-
+    psql -p {{ pgagent_database_port }} -d {{ pgagent_database }}
     -c "CREATE EXTENSION IF NOT EXISTS pgagent"
   register: create_extension
   become_user: postgres
@@ -34,7 +34,7 @@
 - name: Create env file
   template:
     src: templates/env.conf
-    dest: /etc/pgagent/{{ pgAgent_database }}.conf
+    dest: /etc/pgagent/{{ pgagent_database }}.conf
     owner: root
     group: root
     mode: '0644'

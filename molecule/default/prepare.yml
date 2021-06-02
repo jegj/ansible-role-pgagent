@@ -19,13 +19,21 @@
         - postgresql-contrib
 
     - name: Get the version from the offline pg cluster
-      shell: pg_lsclusters -h | awk '{ print $1 }'
+      shell: >-
+        set -o pipefail &&
+        pg_lsclusters -h | awk '{ print $1 }'
       register: pg_cluster_version
+      args:
+        executable: /bin/bash
       changed_when: no
 
     - name: Get the version from the offline pg cluster
-      shell: pg_lsclusters -h | awk '{ print $3 }'
+      shell: >-
+        set -o pipefail &&
+        pg_lsclusters -h | awk '{ print $3 }'
       register: pg_cluster_port
+      args:
+        executable: /bin/bash
       changed_when: no
 
     - name: Start pg cluster
@@ -36,3 +44,4 @@
       command: >-
         psql -p {{ pg_cluster_port.stdout }} -c "CREATE DATABASE pgagent_test_db"
       become_user: postgres
+      changed_when: no

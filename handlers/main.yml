@@ -1,7 +1,7 @@
 ---
 - name: restart pgagent
   systemd:
-    name: "pgagent@{{ pgAgent_database }}"
+    name: "pgagent@{{ pgagent_database }}"
     state: restarted
     enabled: yes
     daemon_reload: yes

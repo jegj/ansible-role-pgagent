@@ -2,7 +2,7 @@
 - name: default
   hosts: all
   vars:
-    pgAgent_database: pgagent_test_db
+    pgagent_database: pgagent_test_db
   tasks:
     - name: "Include pgAgent role"
       include_role:

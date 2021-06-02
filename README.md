@@ -11,15 +11,15 @@ None
 Role Variables
 --------------
 
-    pgAgent_database: ""
+    pgagent_database: ""
 
 Target database for pgAGent. **REQUIRED**, Otherwise the role will fail
 
-    pgAgent_database_port: 5432
+    pgagent_database_port: 5432
 
 Target postgres database port. Default to `5432`
 
-    pgAgent_upgrade: false
+    pgagent_upgrade: false
 
 Allow to upgrade `pgagent` apt package if required. Default to `false`
 

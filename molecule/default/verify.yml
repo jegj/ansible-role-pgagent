@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   vars:
-    pgAgent_database: pgagent_test_db
+    pgagent_database: pgagent_test_db
   tasks:
 
     - name: force all notified handlers
@@ -11,7 +11,7 @@
 
     - name: Check pgagent is started
       systemd:
-        name: "pgagent@{{ pgAgent_database }}"
+        name: "pgagent@{{ pgagent_database }}"
         state: started
         enabled: yes
         daemon_reload: yes

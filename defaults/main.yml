@@ -1,4 +1,4 @@
 ---
-pgAgent_upgrade: false
-pgAgent_database: ''
-pgAgent_database_port: 5432
+pgagent_upgrade: false
+pgagent_database: ''
+pgagent_database_port: 5432
