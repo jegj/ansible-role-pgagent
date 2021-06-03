@@ -13,7 +13,6 @@
         name: "{{ item }}"
         state: present
       loop:
-        - curl
         - build-essential
         - postgresql
         - postgresql-contrib
