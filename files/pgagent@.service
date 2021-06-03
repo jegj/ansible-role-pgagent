@@ -14,7 +14,8 @@ User=postgres
 Group=postgres
 EnvironmentFile=/etc/pgagent/%i.conf
 PermissionsStartOnly=true
-ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -t ${PG_AGENT_POLL_INTERVAL} -r ${PG_AGENT_RETRY_PERIOD} -l ${PG_AGENT_LOG_VERBOSITY} dbname=%i user=postgres port=${PG_AGENT_TARGET_PORT}
+PG_AGENT_HOST_ADDR={{ pgagent_hostaddr }}
+ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -t ${PG_AGENT_POLL_INTERVAL} -r ${PG_AGENT_RETRY_PERIOD} -l ${PG_AGENT_LOG_VERBOSITY} hostaddr=${PG_AGENT_HOST_ADDR} dbname=%i user=postgres port=${PG_AGENT_TARGET_PORT}
 Restart=on-failure
 
 [Install]

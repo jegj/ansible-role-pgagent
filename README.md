@@ -7,7 +7,7 @@ Ansible Role pgAgent
 1) Install [pgAgent](https://www.pgadmin.org/docs/pgadmin4/development/pgagent.html) package.
 2) Create the postgres extension on the target database.
 3) Create a configuration file for the target database.
-4) Start pgAgent systemd unit for a target database server.
+4) Start a local pgAgent systemd unit for a target database server.
 
 On a Debian/Ubuntu system.
 
@@ -51,9 +51,10 @@ pgAgent Unit Configuration File
 The role will create a configuration file per database located at `/etc/pgagent/{{ your_db }}.conf` with the following configuration options:
 
 - `PG_AGENT_TARGET_PORT`: Postgres Database port.
-- `PG_AGENT_LOG_VERBOSITY`: pgAgent Verbosity. Default to `1`(WARNING). Allowed values: (ERROR=0, WARNING=1, DEBUG=2)
-- `PG_AGENT_RETRY_PERIOD`: pgAgent retry period after connection abort in seconds. Default to `30`
-- `PG_AGENT_POLL_INTERVAL`: pgAgent poll time interval in seconds. Default to `10`
+- `PG_AGENT_HOST_ADDR`: Postgres Database host. Default to `127.0.0.1`.
+- `PG_AGENT_LOG_VERBOSITY`: pgAgent Verbosity. Default to `1`(WARNING). Allowed values: (ERROR=0, WARNING=1, DEBUG=2).
+- `PG_AGENT_RETRY_PERIOD`: pgAgent retry period after connection abort in seconds. Default to `30`.
+- `PG_AGENT_POLL_INTERVAL`: pgAgent poll time interval in seconds. Default to `10`.
 
 Restart the pgagent unit for the target database to get the new configuration options with the following command:
 ```sh
