@@ -4,6 +4,7 @@ extends: default
 ignore: |
   molecule/
   roles/external/
+  vagrant/
 
 rules:
   truthy:

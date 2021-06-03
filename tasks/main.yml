@@ -33,7 +33,7 @@
   notify: restart pgagent
   changed_when: >-
     'already installed' not in update_extension.stderr
-  when:  pgagent_upgrade and apt_pkg.changed
+  when: pgagent_upgrade and apt_pkg.changed
 
 - name: Create a directory for env variables
   file:
