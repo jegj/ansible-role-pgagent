@@ -48,7 +48,7 @@ Example Playbook
 ```
 pgAgent Unit Configuration File
 ----------------
-The role will create a configuration file per database located at `/etc/pgagent/{{ pgagent_database }}.conf` with the following configuration options:
+The role will create a configuration file per database located at `/etc/pgagent/{{ your_db }}.conf` with the following configuration options:
 
 - `PG_AGENT_TARGET_PORT`: Postgres Database port.
 - `PG_AGENT_LOG_VERBOSITY`: pgAgent Verbosity. Default to `1`(WARNING). Allowed values: (ERROR=0, WARNING=1, DEBUG=2)
@@ -57,14 +57,14 @@ The role will create a configuration file per database located at `/etc/pgagent/
 
 Restart the pgagent unit for the target database to get the new configuration options with the following command:
 ```sh
-sudo systemctl restart pgagent@{{ pgagent_database }}
+sudo systemctl restart pgagent@{{ your_db }}
 ```
 
 Check [here](https://www.pgadmin.org/docs/pgadmin4/development/pgagent_install.html#daemon-installation-on-unix) for more information
 
 pgAgent Log File
 ----------------
-The systemd unit will log to the file `/var/log/pgagent/{{ pgagent_database }}.log` by default. There is also an entry at `/etc/logrotate.d/pgagent` that will rotate the log weekly by default.
+The systemd unit will log to the file `/var/log/pgagent/{{ your_db }}.log` by default. There is also an entry at `/etc/logrotate.d/pgagent` that will rotate the log weekly by default.
 
 License
 -------
