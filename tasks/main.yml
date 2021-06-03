@@ -56,7 +56,7 @@
     group: root
     mode: 0644
 
-- name: Copy pgAgent template unit into /lib/systemd/system/pgagent@.service
+- name: Copy pgAgent template unit into /etc/systemd/system/pgagent@.service
   copy:
     src: files/pgagent@.service
     dest: /etc/systemd/system/pgagent@.service
