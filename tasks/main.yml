@@ -6,10 +6,10 @@
 
 - name: Install pgagent apt package
   apt:
-    state: present
     name: pgagent
     update_cache: yes
-    only_upgrade: "{{ pgagent_upgrade }}"
+    state: "{{ pgagent_upgrade | ternary('latest', 'present', 'present') }}"
+  register: apt_pkg
   notify: restart pgagent
 
 - name: Create extension in the target database
@@ -20,8 +20,20 @@
   become_user: postgres
   become: yes
   changed_when: >-
-    'already exists, skipping' not in create_extension.stderr
+    'already exists' not in create_extension.stderr
   notify: restart pgagent
+
+- name: Update extension in the target database
+  command: >-
+    psql -p {{ pgagent_database_port }} -d {{ pgagent_database }}
+    -c "ALTER EXTENSION pgagent UPDATE;"
+  register: update_extension
+  become_user: postgres
+  become: yes
+  notify: restart pgagent
+  changed_when: >-
+    'already installed' not in update_extension.stderr
+  when:  pgagent_upgrade and apt_pkg.changed
 
 - name: Create a directory for env variables
   file:
