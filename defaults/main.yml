@@ -2,4 +2,6 @@
 pgagent_upgrade: false
 pgagent_database: ''
 pgagent_database_port: 5432
-pgagent_hostaddr: 127.0.0.1
+# pgagent_hostaddr: null
+pgagent_user: postgres
+# pgagent_password: null

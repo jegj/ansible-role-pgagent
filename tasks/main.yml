@@ -12,12 +12,47 @@
   register: apt_pkg
   notify: restart pgagent
 
+- name: Create common pg_env variable
+  no_log: true
+  set_fact:
+    pg_env: >-
+      {{ pg_env | default({}) | combine ({ item.key : item.value }) }}
+    is_remote_host: >-
+      {{ pgagent_hostaddr is defined and pgagent_hostaddr|length > 0 }}
+    has_password: >-
+      {{ pgagent_password is defined and pgagent_password|length > 0 }}
+    no_postgres_user: "{{ pgagent_user != 'postgres' }}"
+  with_items:
+    - {'key': 'PGDATABASE', 'value': "{{ pgagent_database }}"}
+    - {'key': 'PGPORT', 'value': "{{ pgagent_database_port }}"}
+
+- name: Add PGUSER if it is different to postgres
+  set_fact:
+    pg_env: "{{ pg_env | combine ({ item.key : item.value }) }}"
+  with_items:
+    - {'key': 'PGUSER', 'value': "{{ pgagent_user }}"}
+  when: no_postgres_user
+
+- name: Add PGPASSWORD if it is defined and not empty
+  set_fact:
+    pg_env: "{{ pg_env | combine ({ item.key : item.value }) }}"
+  with_items:
+    - {'key': 'PGPASSWORD', 'value': "{{ pgagent_password }}"}
+  when: has_password
+
+- name: Add PGHOST if it is defined and not empty
+  set_fact:
+    pg_env: "{{ pg_env | combine ({ item.key : item.value }) }}"
+  with_items:
+    - {'key': 'PGHOST', 'value': "{{ pgagent_hostaddr }}"}
+  when: is_remote_host
+
 - name: Create extension in the target database
   command: >-
-    psql -p {{ pgagent_database_port }} -d {{ pgagent_database }}
-    -c "CREATE EXTENSION IF NOT EXISTS pgagent"
+    psql -c "CREATE EXTENSION IF NOT EXISTS pgagent"
   register: create_extension
   become_user: postgres
+  environment: "{{ pg_env }}"
   become: yes
   changed_when: >-
     'already exists' not in create_extension.stderr
@@ -25,8 +60,8 @@
 
 - name: Update extension in the target database
   command: >-
-    psql -p {{ pgagent_database_port }} -d {{ pgagent_database }}
-    -c "ALTER EXTENSION pgagent UPDATE;"
+    psql -c "ALTER EXTENSION pgagent UPDATE;"
+  environment: "{{ pg_env }}"
   register: update_extension
   become_user: postgres
   become: yes
@@ -69,8 +104,8 @@
     mode: 0644
 
 - name: Copy pgAgent template unit into /etc/systemd/system/pgagent@.service
-  copy:
-    src: files/pgagent@.service
+  template:
+    src: templates/pgagent@.service
     dest: /etc/systemd/system/pgagent@.service
     owner: root
     group: root
