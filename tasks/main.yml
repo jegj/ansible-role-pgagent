@@ -57,6 +57,7 @@
   changed_when: >-
     'already exists' not in create_extension.stderr
   notify: restart pgagent
+  when: not is_remote_host
 
 - name: Update extension in the target database
   command: >-
@@ -68,7 +69,7 @@
   notify: restart pgagent
   changed_when: >-
     'already installed' not in update_extension.stderr
-  when: pgagent_upgrade and apt_pkg.changed
+  when: not is_remote_host and pgagent_upgrade and apt_pkg.changed
 
 - name: Create a directory for env variables
   file:
