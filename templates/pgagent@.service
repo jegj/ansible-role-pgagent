@@ -7,14 +7,14 @@ CPUAccounting=yes
 MemoryAccounting=yes
 TasksAccounting=yes
 Type=forking
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=journal
+StandardError=journal
 SyslogIdentifier=pgagent_%i
 User=postgres
 Group=postgres
 EnvironmentFile=/etc/pgagent/%i.conf
 PermissionsStartOnly=true
-ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -t ${PG_AGENT_POLL_INTERVAL} -r ${PG_AGENT_RETRY_PERIOD} -l ${PG_AGENT_LOG_VERBOSITY} {% if is_remote_host %} hostaddr=${PG_AGENT_HOST_ADDR} {% endif %} {% if has_password %} password=${PG_AGENT_PASSWORD} {% endif %} dbname=%i user=${PG_AGENT_USER} port=${PG_AGENT_TARGET_PORT}
+ExecStart=/usr/bin/pgagent -s /var/log/pgagent/%i.log -t ${PG_AGENT_POLL_INTERVAL} -r ${PG_AGENT_RETRY_PERIOD} -l ${PG_AGENT_LOG_VERBOSITY} {% if is_remote_host %} hostaddr=${PG_AGENT_HOST_ADDR} {% endif %} {% if has_password %} password=${PG_AGENT_PASSWORD} {% endif %} dbname=%i user=${PG_AGENT_USER} application_name=pgagent port=${PG_AGENT_TARGET_PORT}
 Restart=on-failure
 
 [Install]
